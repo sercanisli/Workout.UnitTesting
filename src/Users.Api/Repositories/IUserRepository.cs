@@ -5,6 +5,7 @@ namespace Users.Api.Repositories
     public interface IUserRepository
     {
         Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<bool> IsNameExist(string fullName ,CancellationToken cancellationToken = default);
         Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<bool> CreateAsync(User user, CancellationToken cancellationToken = default);
         Task<bool> UpdateAsync(Guid id, User user, CancellationToken cancellationToken = default);

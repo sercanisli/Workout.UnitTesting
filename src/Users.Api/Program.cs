@@ -9,6 +9,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureSqlConnection(builder.Configuration);
+builder.Services.ConfigureRepositories();
+builder.Services.ConfigureServices();
+builder.Services.AddAutoMapper(typeof(Program));
+
 
 var app = builder.Build();
 

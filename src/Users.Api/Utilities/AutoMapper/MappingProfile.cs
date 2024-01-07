@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Users.Api.DataTransferObjects;
+using Users.Api.Models;
+using Users.Api.Utilities.FluentValidation;
 
 namespace Users.Api.Utilities.AutoMapper
 {
@@ -7,7 +9,7 @@ namespace Users.Api.Utilities.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<UserDtoForInsertion, UserDtoForInsertion>().ReverseMap();
+            CreateMap<UserDtoForInsertion, User>().ReverseMap();
         }
     }
 }

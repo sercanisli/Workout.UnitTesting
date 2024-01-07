@@ -26,6 +26,11 @@ namespace Users.Api.Repositories
         public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
             await context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
+        public async Task<bool> IsNameExist(string fullName, CancellationToken cancellationToken = default)
+        {
+            return await context.Users.AnyAsync(u => u.FullName == fullName, cancellationToken);
+        }
+
         public Task<bool> UpdateAsync(Guid id, User user, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();

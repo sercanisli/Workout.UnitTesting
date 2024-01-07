@@ -1,6 +1,24 @@
 @Users.Api_HostAddress = http://localhost:5026
 
-GET {{Users.Api_HostAddress}}/weatherforecast/
+GET {{Users.Api_HostAddress}}/api/Users/GetAll
+Accept: application/json
+
+###
+
+GET {{Users.Api_HostAddress}}/api/Users/GetById/5876014f-1f24-47a9-0f83-08dc0f974e09
+Accept: application/json
+
+###
+
+POST {{Users.Api_HostAddress}}/api/Users/Create
+Accept: application/json
+Content-Type: application/json
+{
+  "fullName" : "Esin Duru"
+}
+###
+
+GET {{Users.Api_HostAddress}}/api/Users/Delete/a9ff0d2a-43ef-432b-60b9-08dc0f986880
 Accept: application/json
 
 ###

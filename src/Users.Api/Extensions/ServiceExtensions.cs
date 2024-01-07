@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Users.Api.Context;
+using Users.Api.Repositories;
+using Users.Api.Services;
 
 namespace Users.Api.Extensions
 {
@@ -9,6 +11,16 @@ namespace Users.Api.Extensions
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+        }
+
+        public static void ConfigureRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<IUserRepository, UserRepository>();
+        }
+
+        public static void ConfigureServices(this IServiceCollection services)
+        {
+            services.AddScoped<IUserService, UserManager>();
         }
     }
 }
