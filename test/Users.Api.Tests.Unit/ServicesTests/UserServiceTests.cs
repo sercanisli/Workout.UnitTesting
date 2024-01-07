@@ -32,5 +32,27 @@ namespace Users.Api.Tests.Unit.ServicesTests
             //Assert
             result.Should().BeEmpty();
         }
+
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnsUsers_WhenSomeUsersExist()
+        {
+            //Arrange
+            var testUser = new User() 
+            {
+                Id = Guid.NewGuid(),
+                FullName = "Sercan ISLI"
+            };
+            var expectedUser = new List<User>()
+            {
+                testUser
+            };
+
+            _userRepository.GetAllAsync().Returns(expectedUser);
+            //Act
+            var result = await _sut.GetAllAsync();
+
+            //Assert
+            result.Should().BeEquivalentTo(expectedUser);
+        }
     }
 }
