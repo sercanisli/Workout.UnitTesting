@@ -25,5 +25,9 @@ namespace Users.Api.Extensions
             services.AddScoped<IUserService, UserManager>();
         }
 
+        public static void ConfigureLogger(this IServiceCollection services)
+        {
+            services.AddTransient(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
+        }
     }
 }
