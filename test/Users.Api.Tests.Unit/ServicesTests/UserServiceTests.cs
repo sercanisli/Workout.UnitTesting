@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using NSubstitute.ReturnsExtensions;
 using Users.Api.Logging;
 using Users.Api.Models;
 using Users.Api.Repositories;
@@ -84,6 +85,19 @@ namespace Users.Api.Tests.Unit.ServicesTests
             //Assert
             await requestAction.Should().ThrowAsync<ArgumentException>();
             _logger.Received(1).LogError(Arg.Is(exception), Arg.Is("Something went wrong while retrieving all users"));
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_ShouldReturnNull_WhenNoUserExists()
+        {
+            //Arrange
+            _userRepository.GetByIdAsync(Arg.Any<Guid>()).ReturnsNull();
+
+            //Act
+            var result = await _sut.GetByIdAsync(Guid.NewGuid());
+
+            //Assert
+           result.Should().BeNull();
         }
     }
 }
