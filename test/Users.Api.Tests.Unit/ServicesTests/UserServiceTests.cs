@@ -117,5 +117,21 @@ namespace Users.Api.Tests.Unit.ServicesTests
             //Assert
             result.Should().BeEquivalentTo(existingUser);
         }
+
+        [Fact]
+        public async Task GetByIdAsync_ShouldLogMessages_WhenInvoked()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            _userRepository.GetByIdAsync(userId).ReturnsNull();
+
+            //Act
+            await _sut.GetByIdAsync(userId);
+
+            //Assert
+            _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains("Retrieving user with id :")));
+            _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"User with id : {userId} retrieved in")), Arg.Any<object[]>());
+
+        }
     }
 }
