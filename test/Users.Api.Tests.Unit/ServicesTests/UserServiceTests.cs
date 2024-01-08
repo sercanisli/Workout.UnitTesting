@@ -133,5 +133,21 @@ namespace Users.Api.Tests.Unit.ServicesTests
             _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"User with id : {userId} retrieved in")), Arg.Any<object[]>());
 
         }
+
+        [Fact]
+        public async Task GetByIdAsync_ShouldLogMessageAndException_WhenExceptionIsThrown()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            var exception = new ArgumentException("Something went wrong while retrieving user");
+            _userRepository.GetByIdAsync(userId).Throws(exception);
+
+            //Act
+            var requestAction = async () => await _sut.GetByIdAsync(userId);
+
+            //Assert
+            await requestAction.Should().ThrowAsync<ArgumentException>();
+            _logger.Received(1).LogError(Arg.Is(exception), Arg.Is($"Something went wrong while retrieving user with id : {userId}"));
+        }
     }
 }
