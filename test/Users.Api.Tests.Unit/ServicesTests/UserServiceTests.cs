@@ -99,5 +99,23 @@ namespace Users.Api.Tests.Unit.ServicesTests
             //Assert
            result.Should().BeNull();
         }
+
+        [Fact]
+        public async Task GetByIdAsync_ShouldReturnUser_WhenSomeUserExists()
+        {
+            //Arrange
+            var existingUser = new User()
+            {
+                Id = Guid.NewGuid(),
+                FullName = "Sercan ISLI"
+            };
+
+            _userRepository.GetByIdAsync(Arg.Any<Guid>()).Returns(existingUser);
+            //Act
+            var result = await _sut.GetByIdAsync(Guid.NewGuid());
+
+            //Assert
+            result.Should().BeEquivalentTo(existingUser);
+        }
     }
 }
