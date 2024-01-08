@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
+using Users.Api.Logging;
 using Users.Api.Models;
 using Users.Api.Repositories;
 using Users.Api.Services;
@@ -12,7 +12,7 @@ namespace Users.Api.Tests.Unit.ServicesTests
     {
         private readonly UserManager _sut;
         private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
-        private readonly ILogger<User> _logger = Substitute.For<ILogger<User>>();
+        private readonly ILoggerAdapter<UserManager> _logger = Substitute.For<ILoggerAdapter<UserManager>>();
         private readonly IMapper _mapper;
 
         public UserServiceTests()
@@ -53,6 +53,21 @@ namespace Users.Api.Tests.Unit.ServicesTests
 
             //Assert
             result.Should().BeEquivalentTo(expectedUser);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_ShouldLogMessages_WhenInvoked()
+        {
+            //Arrange
+            _userRepository.GetAllAsync().Returns(Enumerable.Empty<User>().ToList());
+
+            //Act
+            await _sut.GetAllAsync();
+
+            //Assert
+            _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains("Retrieving all users")));
+            _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains("All users retrieved")), Arg.Any<object[]>());
+
         }
     }
 }

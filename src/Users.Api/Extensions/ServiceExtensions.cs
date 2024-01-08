@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Users.Api.Context;
+using Users.Api.Logging;
+using Users.Api.Models;
 using Users.Api.Repositories;
 using Users.Api.Services;
 
@@ -22,5 +24,6 @@ namespace Users.Api.Extensions
         {
             services.AddScoped<IUserService, UserManager>();
         }
+
     }
 }

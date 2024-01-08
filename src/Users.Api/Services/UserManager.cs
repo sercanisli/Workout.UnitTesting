@@ -2,13 +2,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Users.Api.DataTransferObjects;
+using Users.Api.Logging;
 using Users.Api.Models;
 using Users.Api.Repositories;
 using Users.Api.Utilities.FluentValidation;
 
 namespace Users.Api.Services
 {
-    public sealed class UserManager(IUserRepository _repository, ILogger<User> _logger, IMapper _mapper) : IUserService
+    public sealed class UserManager(IUserRepository _repository, ILoggerAdapter<UserManager> _logger, IMapper _mapper) : IUserService
     {
         public async Task<bool> CreateAsync(UserDtoForInsertion userDtoForInsertion, CancellationToken cancellationToken = default)
         {
@@ -86,7 +87,7 @@ namespace Users.Api.Services
             finally
             {
                 stopWatch.Stop();
-                _logger.LogInformation($"All users retrieved in {stopWatch.ElapsedMilliseconds}");
+                _logger.LogInformation($"All users retrieved in {stopWatch.ElapsedMilliseconds} ms");
             }
         }
 
