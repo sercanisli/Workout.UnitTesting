@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Users.Api.Logging;
 using Users.Api.Models;
 using Users.Api.Repositories;
@@ -68,6 +69,21 @@ namespace Users.Api.Tests.Unit.ServicesTests
             _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains("Retrieving all users")));
             _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains("All users retrieved")), Arg.Any<object[]>());
 
+        }
+
+        [Fact]
+        public async Task GetAllAsync_ShouldLogMessageAndException_WhenExceptionIsThrown()
+        {
+            //Arrange
+            var exception = new ArgumentException("Something went wrong while retrieving all users");
+            _userRepository.GetAllAsync().Throws(exception);
+
+            //Act
+            var requestAction = async () => await _sut.GetAllAsync();
+
+            //Assert
+            await requestAction.Should().ThrowAsync<ArgumentException>();
+            _logger.Received(1).LogError(Arg.Is(exception), Arg.Is("Something went wrong while retrieving all users"));
         }
     }
 }
