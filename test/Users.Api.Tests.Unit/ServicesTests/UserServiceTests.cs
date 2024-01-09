@@ -159,13 +159,30 @@ namespace Users.Api.Tests.Unit.ServicesTests
             UserDtoForInsertion userDtoForInsertion = new UserDtoForInsertion()
             {
                 FullName = ""
-            }; //boş bir Dto uluşturdum
+            };
 
             //Act
-            var action = async () => await _sut.CreateAsync(userDtoForInsertion); //bir action method ile çağırdık.
+            var action = async () => await _sut.CreateAsync(userDtoForInsertion); 
 
             //Assert
             action.Should().ThrowAsync<ValidationException>();
         }
+
+        [Fact]
+        public async Task CreateAsync_ShouldThrownAnError_WhenUserNameExists()
+        {
+            //Arrange
+            _userRepository.IsNameExist(Arg.Any<string>()).Returns(true);
+
+            //Act
+            var action = async () => await _sut.CreateAsync(new UserDtoForInsertion()
+            {
+                FullName = "Sercan ISLI"
+            });
+
+            //Assert
+            action.Should().ThrowAsync<ArgumentException>();
+        }
+
     }
 }
