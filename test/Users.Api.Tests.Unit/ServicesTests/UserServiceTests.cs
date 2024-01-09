@@ -184,5 +184,6 @@ namespace Users.Api.Tests.Unit.ServicesTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+
     }
 }

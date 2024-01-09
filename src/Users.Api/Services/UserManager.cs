@@ -24,9 +24,8 @@ namespace Users.Api.Services
             {
                 throw new ArgumentException("Name already exist ");
             }
-
+            var mappedUser = UserDtoForInseritonToUserObject(userDtoForInsertion);
             _logger.LogInformation($"Creating user yith id {userDtoForInsertion.Id} and name {userDtoForInsertion.FullName}");
-            var mappedUser = _mapper.Map<User>(userDtoForInsertion);
             var stopWatch = Stopwatch.StartNew();
             try
             {
@@ -44,6 +43,10 @@ namespace Users.Api.Services
             }
             
         }
+
+        public User UserDtoForInseritonToUserObject(UserDtoForInsertion userDtoForInsertion)=>
+            _mapper.Map<User>(userDtoForInsertion);
+
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
