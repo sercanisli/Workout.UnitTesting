@@ -24,12 +24,12 @@ namespace Users.Api.Services
             {
                 throw new ArgumentException("Name already exist ");
             }
-            var mappedUser = UserDtoForInseritonToUserObject(userDtoForInsertion);
+            var user = UserDtoForInseritonToUserObject(userDtoForInsertion);
             _logger.LogInformation($"Creating user yith id {userDtoForInsertion.Id} and name {userDtoForInsertion.FullName}");
             var stopWatch = Stopwatch.StartNew();
             try
             {
-                return await _repository.CreateAsync(mappedUser, cancellationToken);
+                return await _repository.CreateAsync(user, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -39,14 +39,19 @@ namespace Users.Api.Services
             finally
             {
                 stopWatch.Stop();
-                _logger.LogInformation($"User with id: {mappedUser.Id} created in {stopWatch.ElapsedMilliseconds}ms");
+                _logger.LogInformation($"User with id: {user.Id} created in {stopWatch.ElapsedMilliseconds}ms");
             }
             
         }
 
-        public User UserDtoForInseritonToUserObject(UserDtoForInsertion userDtoForInsertion)=>
-            _mapper.Map<User>(userDtoForInsertion);
-
+        public User UserDtoForInseritonToUserObject(UserDtoForInsertion userDtoForInsertion)
+        {
+            User user = new User()
+            {
+                FullName = userDtoForInsertion.FullName,
+            };
+            return user;
+        }
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {

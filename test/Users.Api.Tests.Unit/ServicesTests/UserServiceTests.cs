@@ -184,6 +184,20 @@ namespace Users.Api.Tests.Unit.ServicesTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+        [Fact]
+        public void CreateAsync_ShouldUserDtoForInseritonToUserObject()
+        {
+            //Arrange
+            UserDtoForInsertion userDtoForInsertion = new UserDtoForInsertion()
+            {
+                FullName = "Sercan ISLI"
+            };
 
+            //Act
+            var user = _sut.UserDtoForInseritonToUserObject(userDtoForInsertion);
+
+            //Assert
+            user.FullName.Should().Be(userDtoForInsertion.FullName);
+        }
     }
 }
