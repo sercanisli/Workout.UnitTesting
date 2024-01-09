@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using FluentValidation;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
+using Users.Api.DataTransferObjects;
 using Users.Api.Logging;
 using Users.Api.Models;
 using Users.Api.Repositories;
@@ -148,6 +150,22 @@ namespace Users.Api.Tests.Unit.ServicesTests
             //Assert
             await requestAction.Should().ThrowAsync<ArgumentException>();
             _logger.Received(1).LogError(Arg.Is(exception), Arg.Is($"Something went wrong while retrieving user with id : {userId}"));
+        }
+
+        [Fact]
+        public async Task CreateAsync_ShouldThrownAnError_WhenUserCreateDetailsAreNotValid()
+        {
+            //Arrange
+            UserDtoForInsertion userDtoForInsertion = new UserDtoForInsertion()
+            {
+                FullName = ""
+            }; //boş bir Dto uluşturdum
+
+            //Act
+            var action = async () => await _sut.CreateAsync(userDtoForInsertion); //bir action method ile çağırdık.
+
+            //Assert
+            action.Should().ThrowAsync<ValidationException>();
         }
     }
 }
