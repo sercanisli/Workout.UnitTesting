@@ -261,6 +261,21 @@ namespace Users.Api.Tests.Unit.ServicesTests
         }
 
         [Fact]
+        public async Task DeleteAsync_ShouldThrownAnError_WhenUserNoExist()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+
+            _userRepository.GetByIdAsync(userId).ReturnsNull();
+
+            //Act
+            var action = async () => await _sut.DeleteAsync(userId);
+
+            //Assert
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
         public async Task DeleteAsync_ShouldDeleteUser_WhenUserExist()
         {
             //Arrange
