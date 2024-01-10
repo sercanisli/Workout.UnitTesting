@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Users.Api.Controllers;
+using Users.Api.DataTransferObjects;
 using Users.Api.Models;
 using Users.Api.Services;
 
@@ -44,6 +45,25 @@ namespace Users.Api.Tests.Unit.ControllersTests
 
             //Act
             var result = (OkObjectResult)await _sut.GetById(userId, default);
+
+            //Assert
+            result.StatusCode.Should().Be(200);
+        }
+
+        [Fact]
+        public async Task Create_ShouldReturnTrue()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            UserDtoForInsertion user = new UserDtoForInsertion()
+            {
+                Id = userId,
+                FullName = "Sercan ISLI"
+            };
+            _userService.CreateAsync(user).Returns(true);
+
+            //Act
+            var result = (OkObjectResult)await _sut.Create(user, default);
 
             //Assert
             result.StatusCode.Should().Be(200);
