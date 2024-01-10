@@ -211,11 +211,32 @@ namespace Users.Api.Tests.Unit.ServicesTests
 
             _userRepository.IsNameExist(userDtoForInsertion.FullName).Returns(false);
             _userRepository.CreateAsync(Arg.Any<User>()).Returns(true);
+
             //Act
             var result = await _sut.CreateAsync(userDtoForInsertion);
 
             //Assert
             result.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task CreateAsync_ShouldLogMessages_WhenIvoked()
+        {
+            //Arrange
+            UserDtoForInsertion userDtoForInsertion = new UserDtoForInsertion()
+            {
+                FullName = "Sercan ISLI"
+            };
+
+            _userRepository.IsNameExist(userDtoForInsertion.FullName).Returns(false);
+            _userRepository.CreateAsync(Arg.Any<User>()).Returns(true);
+
+            //Act
+            await _sut.CreateAsync(userDtoForInsertion);
+
+            //Assert
+            _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"User with id: {userDtoForInsertion.Id} created in")));
+            _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"Creating user yith id {userDtoForInsertion.Id} and name {userDtoForInsertion.FullName}")), Arg.Any<object[]>());
         }
     }
 }
