@@ -259,5 +259,26 @@ namespace Users.Api.Tests.Unit.ServicesTests
 
             _logger.Received(1).LogError(Arg.Is(exception), Arg.Is("Something went wrong while creating a user"));
         }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldDeleteUser_WhenUserExist()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+
+            User user = new User()
+            {
+                Id = userId,
+                FullName = "Sercan ISLI"
+            };
+            _userRepository.GetByIdAsync(userId).Returns(user);
+            _userRepository.DeleteAsync(user).Returns(true);
+
+            //Act
+            var result = await _sut.DeleteAsync(userId);
+
+            //Assert
+            result.Should().Be(true);
+        }
     }
 }
