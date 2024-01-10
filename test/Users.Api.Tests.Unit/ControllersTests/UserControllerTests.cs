@@ -29,5 +29,24 @@ namespace Users.Api.Tests.Unit.ControllersTests
             //Assert
             result.StatusCode.Should().Be(200);
         }
+
+        [Fact]
+        public async Task GetById_ShouldReturnUsers()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            User user = new User()
+            {
+                Id = userId,
+                FullName = "Sercan ISLI"
+            };
+            _userService.GetByIdAsync(userId).Returns(user);
+
+            //Act
+            var result = (OkObjectResult)await _sut.GetById(userId, default);
+
+            //Assert
+            result.StatusCode.Should().Be(200);
+        }
     }
 }
