@@ -68,5 +68,19 @@ namespace Users.Api.Tests.Unit.ControllersTests
             //Assert
             result.StatusCode.Should().Be(200);
         }
+
+        [Fact]
+        public async Task Delete_ShouldReturnTrue()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            _userService.DeleteAsync(userId).Returns(true);
+
+            //Act
+            var result = (OkObjectResult)await _sut.Delete(userId, default);
+
+            //Assert
+            result.StatusCode.Should().Be(200);
+        }
     }
 }
