@@ -318,6 +318,28 @@ namespace Users.Api.Tests.Unit.ServicesTests
             _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"User with id : {userId} deleted in")), Arg.Any<object[]>());
         }
 
+        [Fact]
+        public async Task DeleteAsync_ShouldLogMessagesAndExceptions_WhenExcceptionIsThrown()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            User user = new User()
+            {
+                Id = userId,
+                FullName = "Sercan ISLI"
+            };
 
+            _userRepository.GetByIdAsync(userId).Returns(user);
+            var exception = new ArgumentException("Something went wrong while deleting user");
+            _userRepository.DeleteAsync(user).Throws(exception);
+
+            //Act
+            var action = async () => await _sut.DeleteAsync(userId);
+
+            //Assert
+            await action.Should().ThrowAsync<ArgumentException>();
+
+            _logger.Received(1).LogError(Arg.Is(exception), Arg.Is("Something went wrong while deleting user"));
+        }
     }
 }
