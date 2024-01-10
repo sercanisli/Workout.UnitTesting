@@ -238,5 +238,26 @@ namespace Users.Api.Tests.Unit.ServicesTests
             _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"User with id: {userDtoForInsertion.Id} created in")));
             _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"Creating user yith id {userDtoForInsertion.Id} and name {userDtoForInsertion.FullName}")), Arg.Any<object[]>());
         }
+
+        [Fact]
+        public async Task CreateAsync_ShouldLogMessagesAndExceptions_WhenExcceptionIsThrown()
+        {
+            //Arrange
+            UserDtoForInsertion userDtoForInsertion = new UserDtoForInsertion()
+            {
+                FullName = "Sercan ISLI"
+            };
+
+            var exception = new ArgumentException("Something went wrong while creating a user");
+            _userRepository.CreateAsync(Arg.Any<User>()).Throws(exception);
+
+            //Act
+           var action = async () => await _sut.CreateAsync(userDtoForInsertion);
+
+            //Assert
+            await action.Should().ThrowAsync<ArgumentException>();
+
+            _logger.Received(1).LogError(Arg.Is(exception), Arg.Is("Something went wrong while creating a user"));
+        }
     }
 }
