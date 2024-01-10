@@ -199,5 +199,23 @@ namespace Users.Api.Tests.Unit.ServicesTests
             //Assert
             user.FullName.Should().Be(userDtoForInsertion.FullName);
         }
+
+        [Fact]
+        public async void CreateAsync_ShouldCreateUser_WhenDetailsAreValidAndUnique()
+        {
+            //Arrange
+            UserDtoForInsertion userDtoForInsertion = new UserDtoForInsertion()
+            {
+                FullName = "Sercan ISLI"
+            };
+
+            _userRepository.IsNameExist(userDtoForInsertion.FullName).Returns(false);
+            _userRepository.CreateAsync(Arg.Any<User>()).Returns(true);
+            //Act
+            var result = await _sut.CreateAsync(userDtoForInsertion);
+
+            //Assert
+            result.Should().Be(true);
+        }
     }
 }
