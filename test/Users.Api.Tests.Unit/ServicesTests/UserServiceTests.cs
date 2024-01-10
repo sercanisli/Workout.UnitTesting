@@ -295,5 +295,29 @@ namespace Users.Api.Tests.Unit.ServicesTests
             //Assert
             result.Should().Be(true);
         }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldLogMessages_WhenIvoked()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            User user = new User()
+            {
+                Id = userId,
+                FullName = "Sercan ISLI"
+            };
+
+            _userRepository.GetByIdAsync(userId).Returns(user);
+            _userRepository.DeleteAsync(user).Returns(true);
+
+            //Act
+            await _sut.DeleteAsync(userId);
+
+            //Assert
+            _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"Deleting user with id : {userId}")));
+            _logger.Received(1).LogInformation(Arg.Is<string>(s => s.Contains($"User with id : {userId} deleted in")), Arg.Any<object[]>());
+        }
+
+
     }
 }
